@@ -27,7 +27,7 @@ class AgregarFragment : Fragment() {
     lateinit var binding: FragmentAgregarBinding
     var thumbnail: Uri? = null
     private var myPet = MyPet()
-    private val mynewPet = MyPet()
+    private var mynewPet = MyPet()
     private lateinit var myDBOpenHelper: MyDBOpenHelper
     private var modificable: Boolean = false
 
@@ -38,7 +38,7 @@ class AgregarFragment : Fragment() {
             myDBOpenHelper = activity?.applicationContext?.let { MyDBOpenHelper(it, null) }!!
             metodoModificar()
         }
-        cambiarLayout(modificable)
+        cambiarLayout()
     }
 
     override fun onCreateView(
@@ -48,7 +48,7 @@ class AgregarFragment : Fragment() {
     ): View? {
         binding = FragmentAgregarBinding.inflate(inflater, container, false)
         setSpinners()
-        cambiarLayout(modificable)
+        cambiarLayout()
         binding.ivSeleccionarFoto.setOnClickListener(View.OnClickListener { seleccionarImagen() })
         return binding.root
     }
@@ -81,6 +81,7 @@ class AgregarFragment : Fragment() {
                 Glide.with(it.applicationContext).load(myPet.rutaImagen).into(ivSeleccionarFoto)
             }
             btnAgregar.text = Constantes.MODIFICAR
+            tvTitulo.text = Constantes.MODIFICAR_MASCOTA
 
         }
     }
@@ -151,7 +152,7 @@ class AgregarFragment : Fragment() {
     }
 
 
-    private fun cambiarLayout(modificable: Boolean) {
+    private fun cambiarLayout() {
         myDBOpenHelper = activity?.applicationContext?.let { MyDBOpenHelper(it, null) }!!
         val db: SQLiteDatabase = myDBOpenHelper.readableDatabase
 
@@ -166,8 +167,8 @@ class AgregarFragment : Fragment() {
                 ).show()
 
             } else {
-
                 with(binding) {
+                    mynewPet = MyPet()
                     mynewPet.id = UUID.randomUUID().toString()
                     mynewPet.nombre = edNombre.text.toString()
                     mynewPet.nombreCientifico = edNombreCientifico.text.toString()
@@ -182,10 +183,11 @@ class AgregarFragment : Fragment() {
                     binding.edEnlace.setText("")
 
                     if (modificable) {
+                        mynewPet.id = myPet.id
+                        mynewPet.rutaImagen = myPet.rutaImagen
                         if (myPet.favorito) {
                             mynewPet.favorito = true
                         }
-                        mynewPet.rutaImagen = myPet.rutaImagen
                     }
                     if (thumbnail != null) {
                         mynewPet.rutaImagen = thumbnail.toString()
@@ -195,22 +197,29 @@ class AgregarFragment : Fragment() {
                 if (modificable) {
                     myDBOpenHelper.updatePet(myPet.id, mynewPet)
                 } else {
-
                     myDBOpenHelper.addPet(mynewPet)
                 }
-
-                binding.edNombre.setText("")
-                binding.edNombreCientifico.setText("")
-                binding.edEnlace.setText("")
-                binding.ivSeleccionarFoto.setImageResource(R.drawable.ic_baseline_photo_camera_24)
-
+                modificable = false
+                reset()
                 val viewPager = activity?.findViewById<ViewPager>(R.id.viewPager)
                 val fragment = (viewPager?.adapter as ViewPagerAdapter).getItem(0) as ListaFragment
                 fragment.refresh()
-
-
+                viewPager.setCurrentItem(0, true)
+                db.close()
             }
         }
+    }
+
+    private fun reset() {
+        binding.edNombre.setText("")
+        binding.edNombreCientifico.setText("")
+        binding.edEnlace.setText("")
+        binding.tvTitulo.text = Constantes.ANYADIR_MASCOTA
+        binding.btnAgregar.text = Constantes.ANYADIR
+        setSpinners()
+        modificable = false
+        binding.ivSeleccionarFoto.setImageResource(R.drawable.ic_baseline_photo_camera_24)
+        myPet = MyPet()
     }
 
 }

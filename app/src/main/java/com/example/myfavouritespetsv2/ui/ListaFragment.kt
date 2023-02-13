@@ -60,7 +60,6 @@ class ListaFragment(
     }
 
     private fun conexionBBDD() {
-        //Funcion para abrir el archivo de texto y recoger los datos de normales y favoritos
         myDBOpenHelper = activity?.applicationContext?.let { MyDBOpenHelper(it, null) }!!
         val db: SQLiteDatabase = myDBOpenHelper.readableDatabase
         val cursor: Cursor = db.rawQuery(
