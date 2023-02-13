@@ -3,7 +3,6 @@ package com.example.myfavouritespetsv2.bd
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
@@ -67,17 +66,18 @@ class MyDBOpenHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val myPet = MyPet()
         val db = this.writableDatabase
         val selectQuery = "SELECT  * FROM $TABLA_PETS WHERE $COLUMNA_ID = ?"
-        db.rawQuery(selectQuery, arrayOf(idPet)).use{
+        db.rawQuery(selectQuery, arrayOf(idPet)).use {
             if (it.moveToFirst()) {
-            myPet.nombre = it.getString(it.getColumnIndex(COLUMNA_NOMBRE))
-            myPet.nombreCientifico = it.getString(it.getColumnIndex(COLUMNA_NOMBRECIENTIFICO))
-            myPet.pelaje = it.getString(it.getColumnIndex(COLUMNA_PELAJE))
-            myPet.clase = it.getString(it.getColumnIndex(COLUMNA_CLASE))
-            myPet.amorosidad = it.getInt(it.getColumnIndex(COLUMNA_AMOROSIDAD))
-            myPet.rutaImagen = it.getString(it.getColumnIndex(COLUMNA_IMAGEN))
-            myPet.favorito = it.getInt(it.getColumnIndex(COLUMNA_FAVORITO)) > 0
-            myPet.enlace = it.getString(it.getColumnIndex(COLUMNA_ENLACE))
-            return myPet
+                myPet.id = it.getString(it.getColumnIndex(COLUMNA_ID))
+                myPet.nombre = it.getString(it.getColumnIndex(COLUMNA_NOMBRE))
+                myPet.nombreCientifico = it.getString(it.getColumnIndex(COLUMNA_NOMBRECIENTIFICO))
+                myPet.pelaje = it.getString(it.getColumnIndex(COLUMNA_PELAJE))
+                myPet.clase = it.getString(it.getColumnIndex(COLUMNA_CLASE))
+                myPet.amorosidad = it.getInt(it.getColumnIndex(COLUMNA_AMOROSIDAD))
+                myPet.rutaImagen = it.getString(it.getColumnIndex(COLUMNA_IMAGEN))
+                myPet.favorito = it.getInt(it.getColumnIndex(COLUMNA_FAVORITO)) > 0
+                myPet.enlace = it.getString(it.getColumnIndex(COLUMNA_ENLACE))
+                return myPet
             }
         }
         return null

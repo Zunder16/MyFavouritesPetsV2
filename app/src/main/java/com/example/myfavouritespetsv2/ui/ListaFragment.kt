@@ -17,23 +17,15 @@ import com.example.myfavouritespetsv2.bd.MyDBOpenHelper
 import com.example.myfavouritespetsv2.databinding.FragmentListaBinding
 import com.example.myfavouritespetsv2.model.MyPet
 
-class ListaFragment : Fragment() {
+class ListaFragment(
+    private val viewPager: ViewPager,
+    private val agregarFragment: AgregarFragment
+) : Fragment() {
 
     private var datos = (mutableListOf<MyPet>())
     lateinit var binding: FragmentListaBinding
     private lateinit var adapter: PetAdapter
     private lateinit var myDBOpenHelper: MyDBOpenHelper
-    private lateinit var viewPager: ViewPager
-
-    companion object {
-        fun newInstance(idPet: String): ListaFragment {
-            val fragment = ListaFragment()
-            val args = Bundle()
-            args.putString("idpet", idPet)
-            fragment.arguments = args
-            return fragment
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,18 +34,23 @@ class ListaFragment : Fragment() {
     ): View? {
         binding = FragmentListaBinding.inflate(inflater, container, false)
         setListener()
-        viewPager = activity?.findViewById(R.id.viewPager)!!
         return binding.root
     }
 
-
     override fun onResume() {
         super.onResume()
-        // Un metodo que nos lea las lineas del fichero y separe
+        adapter = PetAdapter() { myPet ->
+            viewPager.setCurrentItem(1, true)
+            agregarFragment.getData(myPet, true)
+        }
         datos = (mutableListOf<MyPet>())
-        conexionBBDD(datos)
-        // Ponerle los datos al adaptador
-        adapter = PetAdapter()
+        conexionBBDD()
+        setAdapter(datos)
+    }
+
+    fun refresh() {
+        datos = (mutableListOf<MyPet>())
+        conexionBBDD()
         setAdapter(datos)
     }
 
@@ -62,7 +59,7 @@ class ListaFragment : Fragment() {
         filtrar()
     }
 
-    private fun conexionBBDD(datos: MutableList<MyPet>) {
+    private fun conexionBBDD() {
         //Funcion para abrir el archivo de texto y recoger los datos de normales y favoritos
         myDBOpenHelper = activity?.applicationContext?.let { MyDBOpenHelper(it, null) }!!
         val db: SQLiteDatabase = myDBOpenHelper.readableDatabase
@@ -81,7 +78,7 @@ class ListaFragment : Fragment() {
                 myPet.clase = cursor.getString(4)
                 myPet.amorosidad = cursor.getInt(5)
                 myPet.rutaImagen = cursor.getString(6)
-                myPet.favorito = cursor.getInt(7) > 0;
+                myPet.favorito = cursor.getInt(7) > 0
                 myPet.enlace = cursor.getString(8)
                 datos.add(myPet)
             } while (cursor.moveToNext())
@@ -99,7 +96,7 @@ class ListaFragment : Fragment() {
         activity?.let { adapter.PetAdapter(datos, it.supportFragmentManager) }
         adapter.setViewPager(viewPager)
         binding.rvPet.adapter = adapter
-
+        adapter.notifyDataSetChanged()
     }
 
 
@@ -123,6 +120,7 @@ class ListaFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
+
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,

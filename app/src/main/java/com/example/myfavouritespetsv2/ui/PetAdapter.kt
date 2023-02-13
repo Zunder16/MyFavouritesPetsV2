@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,15 +24,17 @@ import com.example.myfavouritespetsv2.utils.Constantes
 import java.io.File
 
 
-class PetAdapter() : RecyclerView.Adapter<PetAdapter.ViewHolder>() {
-    var petList: MutableList<MyPet> = ArrayList()
+class PetAdapter(
+    private val itemSelected: (MyPet) -> Unit
+) : RecyclerView.Adapter<PetAdapter.ViewHolder>() {
+
+    private var petList: MutableList<MyPet> = ArrayList()
     private lateinit var myDBOpenHelper: MyDBOpenHelper
     private lateinit var viewPager: ViewPager
 
     fun setViewPager(viewPager: ViewPager) {
         this.viewPager = viewPager
     }
-
 
     @SuppressLint("NotConstructor")
     fun PetAdapter(petList: MutableList<MyPet>, fragmentManager: FragmentManager) {
@@ -54,14 +55,13 @@ class PetAdapter() : RecyclerView.Adapter<PetAdapter.ViewHolder>() {
             holder.bind(itemMyPet, petList, fragmentManager)
         }
 
-
     }
 
     override fun getItemCount(): Int {
         return petList.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val binding = ItemPetBinding.bind(view)
 
@@ -98,8 +98,7 @@ class PetAdapter() : RecyclerView.Adapter<PetAdapter.ViewHolder>() {
                 })
 
                 ivEditar.setOnClickListener(View.OnClickListener {
-                    val listener = itemView.context as NavigationListener
-                    listener.navigateToFragment(itemMyPet.id)
+                    itemSelected(itemMyPet)
                 })
             }
         }
@@ -123,15 +122,10 @@ class PetAdapter() : RecyclerView.Adapter<PetAdapter.ViewHolder>() {
             } else {
                 Glide.with(itemView).load(R.drawable.favorito).into(ivFavorito)
             }
+            myDBOpenHelper = itemView.context?.let { MyDBOpenHelper(it, null) }!!
+            myDBOpenHelper.updatePet(itemMyPet.id, itemMyPet)
+            refrescar()
 
-            //
-            petList.forEachIndexed { index, myPet ->
-                if (position == index)
-                    file.appendText(itemMyPet.toString() + System.getProperty("line.separator"))
-                else
-                    file.appendText(myPet.toString() + System.getProperty("line.separator"))
-            }
-            //
         }
 
         private fun dialogo(petList: MutableList<MyPet>, position: Int) {
@@ -147,8 +141,7 @@ class PetAdapter() : RecyclerView.Adapter<PetAdapter.ViewHolder>() {
                     val myDBOpenHelper: MyDBOpenHelper =
                         itemView.context.applicationContext?.let { MyDBOpenHelper(it, null) }!!
                     myDBOpenHelper.delPet(petList[position].id)
-                    val intent = Intent(itemView.context, MainActivity::class.java)
-                    itemView.context.startActivity(intent)
+                    refrescar()
                 }
                 setNegativeButton(android.R.string.no) { _, _ ->
                     Toast.makeText(
@@ -160,6 +153,11 @@ class PetAdapter() : RecyclerView.Adapter<PetAdapter.ViewHolder>() {
             }
             // Se muestra el AlertDialog.
             builder.show()
+        }
+
+        private fun refrescar() {
+            val fragment = (viewPager.adapter as ViewPagerAdapter).getItem(0) as ListaFragment
+            fragment.refresh()
         }
 
     }

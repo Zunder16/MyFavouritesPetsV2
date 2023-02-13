@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.myfavouritespetsv2.R
 import com.example.myfavouritespetsv2.bd.MyDBOpenHelper
@@ -25,24 +26,20 @@ class AgregarFragment : Fragment() {
 
     lateinit var binding: FragmentAgregarBinding
     var thumbnail: Uri? = null
-    private lateinit var myPet: MyPet
+    private var myPet = MyPet()
     private val mynewPet = MyPet()
     private lateinit var myDBOpenHelper: MyDBOpenHelper
+    private var modificable: Boolean = false
 
-
-    companion object {
-
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String) =
-            AgregarFragment().apply {
-                arguments = Bundle().apply {
-                    putString("idPet", param1)
-                }
-            }
+    fun getData(data: MyPet, boolean: Boolean) {
+        myPet = data
+        modificable = boolean
+        if (modificable) {
+            myDBOpenHelper = activity?.applicationContext?.let { MyDBOpenHelper(it, null) }!!
+            metodoModificar()
+        }
+        cambiarLayout(modificable)
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,19 +48,7 @@ class AgregarFragment : Fragment() {
     ): View? {
         binding = FragmentAgregarBinding.inflate(inflater, container, false)
         setSpinners()
-
-        val args = arguments
-        val modificable = args?.getBoolean("modificable", false)
-        val idPet = args?.getString("idPet")
-
-        if (modificable != null) {
-            if (modificable){
-                myDBOpenHelper = activity?.applicationContext?.let { MyDBOpenHelper(it, null) }!!
-                myPet = idPet?.let { myDBOpenHelper.getPet(it) } as MyPet
-                metodoModificar()
-            }
-            cambiarLayout(modificable)
-        }
+        cambiarLayout(modificable)
         binding.ivSeleccionarFoto.setOnClickListener(View.OnClickListener { seleccionarImagen() })
         return binding.root
     }
@@ -181,9 +166,6 @@ class AgregarFragment : Fragment() {
                 ).show()
 
             } else {
-                binding.edNombre.setText("")
-                binding.edNombreCientifico.setText("")
-                binding.edEnlace.setText("")
 
                 with(binding) {
                     mynewPet.id = UUID.randomUUID().toString()
@@ -195,7 +177,11 @@ class AgregarFragment : Fragment() {
                     mynewPet.enlace = edEnlace.text.toString()
                     mynewPet.rutaImagen = Constantes.IMAGEN_DEFECTO
 
-                    if (modificable != null) {
+                    binding.edNombre.setText("")
+                    binding.edNombreCientifico.setText("")
+                    binding.edEnlace.setText("")
+
+                    if (modificable) {
                         if (myPet.favorito) {
                             mynewPet.favorito = true
                         }
@@ -206,12 +192,22 @@ class AgregarFragment : Fragment() {
                     }
                 }
 
-                if (modificable != null) {
+                if (modificable) {
                     myDBOpenHelper.updatePet(myPet.id, mynewPet)
                 } else {
 
                     myDBOpenHelper.addPet(mynewPet)
                 }
+
+                binding.edNombre.setText("")
+                binding.edNombreCientifico.setText("")
+                binding.edEnlace.setText("")
+                binding.ivSeleccionarFoto.setImageResource(R.drawable.ic_baseline_photo_camera_24)
+
+                val viewPager = activity?.findViewById<ViewPager>(R.id.viewPager)
+                val fragment = (viewPager?.adapter as ViewPagerAdapter).getItem(0) as ListaFragment
+                fragment.refresh()
+
 
             }
         }
