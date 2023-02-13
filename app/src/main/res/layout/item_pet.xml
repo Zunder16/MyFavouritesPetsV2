@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="4dp"
+    android:padding="4dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_item">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivImagen"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_launcher_background"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="16sp"
+        android:text="@string/perro"
+        app:layout_constraintStart_toEndOf="@+id/ivImagen"
+        app:layout_constraintTop_toTopOf="@+id/ivImagen" />
+
+    <TextView
+        android:id="@+id/tvNombreCientifico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/labrador"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tvNombre"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombre"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/tvClase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mamifero"
+        app:layout_constraintEnd_toEndOf="@+id/tvPelaje"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tvPelaje"
+        app:layout_constraintTop_toTopOf="@+id/tvNombre" />
+
+    <TextView
+        android:id="@+id/tvPelaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="@string/sedoso"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvNombreCientifico"
+        app:layout_constraintEnd_toStartOf="@+id/tvAmor" />
+
+    <TextView
+        android:id="@+id/tvAmor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/_5"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ivCorazon"
+        app:layout_constraintEnd_toStartOf="@+id/ivCorazon"
+        app:layout_constraintTop_toTopOf="@+id/ivCorazon" />
+
+    <ImageView
+        android:id="@+id/ivCorazon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ivEditar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/corazon" />
+
+    <ImageView
+        android:id="@+id/ivFavorito"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/favorito" />
+
+    <ImageView
+        android:id="@+id/ivEditar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPapelera"
+        app:layout_constraintEnd_toStartOf="@+id/ivPapelera"
+        app:layout_constraintTop_toTopOf="@+id/ivPapelera"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/lapiz" />
+
+    <ImageView
+        android:id="@+id/ivPapelera"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivFavorito"
+        app:srcCompat="@drawable/papelera" />
+
+    <TextView
+        android:id="@+id/tvEnlace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLength="@integer/material_motion_duration_medium_1"
+        android:text="@string/enlace"
+        android:textColor="@android:color/holo_blue_dark"
+        app:layout_constraintStart_toStartOf="@+id/ivEditar"
+        app:layout_constraintTop_toTopOf="@+id/ivFavorito" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

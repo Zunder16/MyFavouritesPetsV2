@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">MFPv2</string>
+    <string name="a_adir_mascota">AÑADIR MASCOTA</string>
+    <string name="nombre">Nombre:</string>
+    <string name="nombre_cientifico">Nombre Cientifico:</string>
+    <string name="clase">Clase:</string>
+    <string name="pelaje">Pelaje:</string>
+    <string name="nivel_de_amorosidad">Nivel de Amorosidad:</string>
+    <string name="a_adir">Añadir</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="ordenar_por">Ordenar por:</string>
+    <string name="enlace">Enlace</string>
+    <string name="perro">Perro</string>
+    <string name="labrador">Labrador</string>
+    <string name="mamifero">Mamifero</string>
+    <string name="sedoso">Sedoso</string>
+    <string name="_5">5</string>
+    <string-array name="desplegable_pelaje">
+        <item>Corto</item>
+        <item>Largo</item>
+        <item>Rizado</item>
+        <item>Lanudo</item>
+    </string-array>
+    <string-array name="desplegable_clase">
+        <item>Ave</item>
+        <item>Mamífero</item>
+        <item>Anfibio</item>
+        <item>Réptil</item>
+    </string-array>
+    <string-array name="desplegable_amorosidad">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="desplegable_ordenar">
+        <item>Todas</item>
+        <item>Amorosidad</item>
+        <item>Favoritas</item>
+        <item>Alfabeticamente</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
